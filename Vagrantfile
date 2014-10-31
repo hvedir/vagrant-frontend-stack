@@ -31,7 +31,7 @@ Vagrant.configure('2') do |config|
 
   #############################################
   # install build tools
-  config.vm.provision :shell, inline: 'apt-get update && apt-get upgrade'
+  config.vm.provision :shell, inline: 'apt-get update && apt-get upgrade -y``'
   config.vm.provision :shell, inline: 'apt-get install -y gdisk python-software-properties python g++ make autoconf automake git-core wget curl vim mc  mongodb'
   # end install build tools
   #############################################
@@ -43,6 +43,9 @@ Vagrant.configure('2') do |config|
   # which will be mounted only while VM is running
   # Other solutions like using symlinks, samba or nfs are not cross-platform
   config.vm.provision :shell, inline: 'echo -e "o\nn\np\n1\n\n+4G\nn\np\n2\n\n+2G\nn\np\n3\n\n\nw" | fdisk /dev/sdb'
+  config.vm.provision :shell, inline: 'mkfs.ext4 /dev/sdb1'
+  config.vm.provision :shell, inline: 'mkfs.ext4 /dev/sdb2'
+  config.vm.provision :shell, inline: 'mkfs.ext4 /dev/sdb3'
   config.vm.provision :shell, inline: 'rm -rf /vagrant/node_modules'
   config.vm.provision :shell, inline: 'mkdir /vagrant/node_modules'
   config.vm.provision :shell, inline: 'echo "/dev/sdb1 /vagrant/node_modules ext4 defaults,rw,noatime 0 0" >> /etc/fstab'
@@ -54,7 +57,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision :shell, inline: 'echo "/dev/sdb3 /vagrant/.tmp ext4 defaults,rw,noatime 0 0" >> /etc/fstab'
   config.vm.provision :shell, inline: 'mount -a'
   config.vm.provision :shell, inline: 'chown -R vagrant:vagrant /vagrant/node_modules'
-  config.vm.provision :shell, inline: 'chown -R vagrant:vagrant /vagrant/.sass_cache'
+  config.vm.provision :shell, inline: 'chown -R vagrant:vagrant /vagrant/.sass-cache'
   config.vm.provision :shell, inline: 'chown -R vagrant:vagrant /vagrant/.tmp'
   # end Format/configure new disk
   #############################################
@@ -96,7 +99,6 @@ Vagrant.configure('2') do |config|
   config.vm.provision :shell, privileged: false, inline: 'echo "this mean that you open http:/localhost:9000 in your browser when dev sever is running"'
   config.vm.provision :shell, privileged: false, inline: "echo && echo {$separator} && echo 'How to run dev server?' && echo '#cd /vagrant' && echo '[opt] #npm install' && echo '[opt]#bower install' && echo '#grunt serve'"
   config.vm.provision :shell, privileged: false, inline: "echo {$separator} && echo {$separator} && echo && echo '<3 Enjoy!' && echo && echo {$separator} && echo {$separator} "
-  config.vm.provision :shell, privileged: false, inline: 'cp -rf /vagrant/provision/dotfiles "$HOME/"'
   config.vm.provision :shell, privileged: false, inline: 'cd /vagrant && npm install'
   # end fixes, workarounds, config
   #############################################
