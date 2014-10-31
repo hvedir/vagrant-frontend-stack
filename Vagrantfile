@@ -31,8 +31,8 @@ Vagrant.configure('2') do |config|
 
   # #############################################
   # # install build tools
-  config.vm.provision :shell, inline: 'apt-get update && apt-get upgrade -y``'
-  config.vm.provision :shell, inline: 'apt-get install -y gdisk python-software-properties python g++ make autoconf automake git-core wget curl vim mc  mongodb'
+  config.vm.provision :shell, inline: 'apt-get update && apt-get upgrade -y'
+  config.vm.provision :shell, inline: 'apt-get install -y gdisk python-software-properties python g++ make autoconf automake git-core wget curl vim mc tmux mongodb'
   # end install build tools
   #############################################
 
@@ -87,8 +87,7 @@ Vagrant.configure('2') do |config|
 
   #############################################
   # fixes, workarounds, config
-  config.vm.provision :shell, inline: 'chown -R vagrant /home/vagrant'
-  config.vm.provision :shell, inline: 'chown -R vagrant /vagrant'
+  config.vm.provision :shell, inline: 'chown -R vagrant:vagrant /home/vagrant /home/vagrant/.* /vagrant'
   config.vm.provision :shell, privileged: false, inline: 'cd /vagrant && npm install'
   config.vm.provision :shell, privileged: false, inline: 'ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""'
   $cmd = <<SCRIPT
