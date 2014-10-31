@@ -26,11 +26,11 @@ Vagrant.configure('2') do |config|
     # vb.gui = true
   end
 
-  $separator = '----------------------------------'
+  separator = '----------------------------------'
 
 
-  #############################################
-  # install build tools
+  # #############################################
+  # # install build tools
   config.vm.provision :shell, inline: 'apt-get update && apt-get upgrade -y``'
   config.vm.provision :shell, inline: 'apt-get install -y gdisk python-software-properties python g++ make autoconf automake git-core wget curl vim mc  mongodb'
   # end install build tools
@@ -89,17 +89,20 @@ Vagrant.configure('2') do |config|
   # fixes, workarounds, config
   config.vm.provision :shell, inline: 'chown -R vagrant /home/vagrant'
   config.vm.provision :shell, inline: 'chown -R vagrant /vagrant'
-  config.vm.provision :shell, privileged: false, inline: 'ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""'
-  config.vm.provision :shell, privileged: false, inline: "echo {$separator} && echo && echo 'SSH public key:' && echo"
-  config.vm.provision :shell, privileged: false, inline: 'cat ~/.ssh/id_rsa.pub'
-  config.vm.provision :shell, privileged: false, inline: "echo && echo {$separator} && echo"
-  config.vm.provision :shell, privileged: false, inline: 'echo "Vagrant home: /home/vagrant"'
-  config.vm.provision :shell, privileged: false, inline: 'echo "Application root: /vagrant"'
-  config.vm.provision :shell, privileged: false, inline: 'echo "Forwarded ports: 9000 (connect server) and 35729 (livereload)"'
-  config.vm.provision :shell, privileged: false, inline: 'echo "this mean that you open http:/localhost:9000 in your browser when dev sever is running"'
-  config.vm.provision :shell, privileged: false, inline: "echo && echo {$separator} && echo 'How to run dev server?' && echo '#cd /vagrant' && echo '[opt] #npm install' && echo '[opt]#bower install' && echo '#grunt serve'"
-  config.vm.provision :shell, privileged: false, inline: "echo {$separator} && echo {$separator} && echo && echo '<3 Enjoy!' && echo && echo {$separator} && echo {$separator} "
   config.vm.provision :shell, privileged: false, inline: 'cd /vagrant && npm install'
+  config.vm.provision :shell, privileged: false, inline: 'ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""'
+  $cmd = <<SCRIPT
+echo "#{separator} \n\nSSH public key: \n"
+cat ~/.ssh/id_rsa.pub
+echo && echo #{separator} && echo && echo 'Summary: '
+echo "\n Vagrant home: /home/vagrant\nApplication root: /vagrant\nForwarded ports: 9000 (connect server) and 35729 (livereload)\n\
+this mean that you open http:/localhost:9000 in your browser when dev sever is running\n\
+#{separator}\nHow to run dev server?\n#cd /vagrant\n[opt] #npm install\n[opt]#bower install\n#grunt serve \n\n\
+!Note: Check your Gruntfile.js, if you have connect.livereload.open flag set to true, change it to false\n\
+because we run application on X-less machine\n\n\
+#{separator}\n#{separator}\n\nEnjoy!\n\n#{separator}\n#{separator}"
+SCRIPT
+  config.vm.provision :shell, privileged: false, inline: $cmd
   # end fixes, workarounds, config
   #############################################
 
