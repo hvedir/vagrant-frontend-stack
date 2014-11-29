@@ -89,7 +89,7 @@ Vagrant.configure('2') do |config|
 
   #############################################
   # fixes, workarounds, config
-  config.vm.provision :shell, inline: 'npm cache clean && chown -R vagrant:vagrant /home/vagrant/ && chown -R vagrant:vagrant /vagrant/.* && chown -R root:vagrant /usr/bin && chmod -R g+w /usr/bin && chown -R vagrant:root /usr/lib/node_modules'
+  config.vm.provision :shell, inline: 'npm cache clean && chown -R vagrant:vagrant /home/vagrant/ && chown -R root:vagrant /usr/bin && chmod -R g+w /usr/bin && chown -R vagrant:root /usr/lib/node_modules'
   config.vm.provision :shell, privileged: false, inline: 'cd /vagrant && npm install'
   config.vm.provision :shell, privileged: false, inline: 'cd /vagrant && npm update'
   config.vm.provision :shell, privileged: false, inline: 'ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""'
